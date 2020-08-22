@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-import importlib_resources
 import pytest
 from django.db import connection
 
@@ -90,21 +89,3 @@ def test_django_migrations_run_properly(django_db):
     # At this point, with the db fixture, we have all migrations applied
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM procrastinate_jobs")
-
-
-@pytest.mark.parametrize(
-    "name", [e.name for e in schema.get_raw_migration_paths() if e.suffix == ".sql"]
-)
-def test_no_missing_django_migration(name):
-    # Testing that each SQL migration is mentioned in the django migrations.
-    # We're not testing that it properly runs, but we're making sure that no
-    # migration was forgotten.
-
-    django_migrations = importlib_resources.files(
-        "procrastinate.contrib.django.migrations"
-    ).iterdir()
-    all_code = "\n".join(f.read_text() for f in django_migrations)
-
-    assert (
-        name in all_code
-    ), f"Missing migration `{name}`. Please run `bin/generate-django-migrations`"

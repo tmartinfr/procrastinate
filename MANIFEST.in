@@ -1,4 +1,3 @@
-prune bin
 prune tests
 prune docs
 prune procrastinate_demo

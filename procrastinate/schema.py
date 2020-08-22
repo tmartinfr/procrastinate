@@ -1,5 +1,4 @@
 import pathlib
-from typing import Iterable
 
 import importlib_resources
 
@@ -24,11 +23,3 @@ class SchemaManager:
     def apply_schema(self) -> None:
         queries = self.get_schema()
         self.connector.execute_query(query=queries)
-
-
-def get_sql(migration) -> str:
-    return importlib_resources.read_text("procrastinate.sql.migrations", migration)
-
-
-def get_raw_migration_paths() -> Iterable[pathlib.Path]:
-    return importlib_resources.files("procrastinate.sql.migrations").iterdir()
